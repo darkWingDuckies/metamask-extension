@@ -12,6 +12,7 @@ export default class TokenCell extends Component {
 
   static propTypes = {
     address: PropTypes.string,
+    highlightActive: PropTypes.bool.isRequired,
     outdatedBalance: PropTypes.bool,
     symbol: PropTypes.string,
     string: PropTypes.string,
@@ -37,6 +38,7 @@ export default class TokenCell extends Component {
     const { tokenMenuOpen } = this.state
     const {
       address,
+      highlightActive,
       symbol,
       string,
       selectedTokenAddress,
@@ -117,7 +119,7 @@ export default class TokenCell extends Component {
 
     return (
       <AssetListItem
-        active={selectedTokenAddress === address}
+        active={highlightActive && selectedTokenAddress === address}
         className={classnames('token-cell', { 'token-cell--outdated': outdatedBalance })}
         iconClassName="token-cell__icon"
         menu={menu}

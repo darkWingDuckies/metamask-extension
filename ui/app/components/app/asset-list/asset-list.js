@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import AddTokenButton from '../add-token-button'
@@ -9,14 +10,15 @@ import CurrencyDisplay from '../../ui/currency-display'
 import { PRIMARY, SECONDARY } from '../../../helpers/constants/common'
 import { useMetricEvent } from '../../../hooks/useMetricEvent'
 import { useUserPreferencedCurrency } from '../../../hooks/useUserPreferencedCurrency'
-import { getCurrentAccountWithSendEtherInfo, getShouldShowFiat } from '../../../selectors/selectors'
+import { getCurrentAccountWithSendEtherInfo, getNativeCurrency, getShouldShowFiat } from '../../../selectors'
 import { setSelectedToken } from '../../../store/actions'
 
-const AssetList = () => {
+const AssetList = ({ highlightActive, onClickAsset }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const selectedAccountBalance = useSelector((state) => getCurrentAccountWithSendEtherInfo(state).balance)
   const selectedTokenAddress = useSelector((state) => state.metamask.selectedTokenAddress)
+  const nativeCurrency = useSelector(getNativeCurrency)
   const showFiat = useSelector(getShouldShowFiat)
   const selectTokenEvent = useMetricEvent({
     eventOpts: {
@@ -45,8 +47,12 @@ const AssetList = () => {
   return (
     <>
       <AssetListItem
-        active={!selectedTokenAddress}
-        onClick={() => dispatch(setSelectedToken())}
+        active={highlightActive && !selectedTokenAddress}
+        onClick={() => {
+          onClickAsset
+            ? onClickAsset(nativeCurrency)
+            : dispatch(setSelectedToken())
+        }}
         data-testid="wallet-balance"
       >
         <CurrencyDisplay
@@ -67,8 +73,11 @@ const AssetList = () => {
         }
       </AssetListItem>
       <TokenList
+        highlightActive={highlightActive}
         onTokenClick={(tokenAddress) => {
-          dispatch(setSelectedToken(tokenAddress))
+          onClickAsset
+            ? onClickAsset(tokenAddress)
+            : dispatch(setSelectedToken(tokenAddress))
           selectTokenEvent()
         }}
       />
@@ -80,6 +89,16 @@ const AssetList = () => {
       />
     </>
   )
+}
+
+AssetList.propTypes = {
+  highlightActive: PropTypes.bool,
+  onClickAsset: PropTypes.func,
+}
+
+AssetList.defaultProps = {
+  highlightActive: true,
+  onClickAsset: undefined,
 }
 
 export default AssetList

@@ -21,6 +21,7 @@ class TokenList extends Component {
 
   static propTypes = {
     assetImages: PropTypes.object.isRequired,
+    highlightActive: PropTypes.bool.isRequired,
     network: PropTypes.string.isRequired,
     onTokenClick: PropTypes.func.isRequired,
     tokens: PropTypes.array.isRequired,
@@ -110,7 +111,7 @@ class TokenList extends Component {
   render () {
     const t = this.context
     const { error, tokensLoading, tokensWithBalances } = this.state
-    const { assetImages, network, onTokenClick } = this.props
+    const { assetImages, highlightActive, network, onTokenClick } = this.props
     if (network === 'loading' || tokensLoading) {
       return (
         <div
@@ -135,6 +136,7 @@ class TokenList extends Component {
             <TokenCell
               key={index}
               {...tokenData}
+              highlightActive={highlightActive}
               outdatedBalance={Boolean(error)}
               onClick={onTokenClick}
             />

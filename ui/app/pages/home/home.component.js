@@ -17,6 +17,7 @@ import { Tabs, Tab } from '../../components/ui/tabs'
 import { EthOverview, TokenOverview } from '../../components/app/wallet-overview'
 
 import {
+  ASSET_ROUTE,
   RESTORE_VAULT_ROUTE,
   CONFIRM_TRANSACTION_ROUTE,
   CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE,
@@ -255,7 +256,7 @@ export default class Home extends PureComponent {
                     <div className="home__main-view">
                       <MenuBar />
                       <div className="home__balance-wrapper">
-                        { homeOverview }
+                        <EthOverview />
                       </div>
                       <Tabs>
                         <Tab
@@ -264,7 +265,10 @@ export default class Home extends PureComponent {
                           data-testid="home__asset-tab"
                           name="Assets"
                         >
-                          <AssetList />
+                          <AssetList
+                            highlightActive={false}
+                            onClickAsset={(asset) => history.push(`${ASSET_ROUTE}/${asset}`)}
+                          />
                         </Tab>
                         <Tab
                           activeClassName="home__tab--active"

@@ -12,7 +12,7 @@ import { SEND_ROUTE } from '../../../helpers/constants/routes'
 import { useMetricEvent } from '../../../hooks/useMetricEvent'
 import { getAssetImages } from '../../../selectors/selectors'
 
-const TokenOverview = ({ token }) => {
+const TokenOverview = ({ className, token }) => {
   const t = useContext(I18nContext)
   const sendTokenEvent = useMetricEvent({
     eventOpts: {
@@ -47,6 +47,7 @@ const TokenOverview = ({ token }) => {
           { t('send') }
         </Button>
       )}
+      className={className}
       icon={(
         <Identicon
           diameter={50}
@@ -59,11 +60,16 @@ const TokenOverview = ({ token }) => {
 }
 
 TokenOverview.propTypes = {
+  className: PropTypes.string,
   token: PropTypes.shape({
     address: PropTypes.string.isRequired,
     decimals: PropTypes.number,
     symbol: PropTypes.string,
   }).isRequired,
+}
+
+TokenOverview.defaultProps = {
+  className: undefined,
 }
 
 export default TokenOverview
